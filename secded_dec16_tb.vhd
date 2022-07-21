@@ -98,7 +98,7 @@ begin
             assert data_i = data_o and one_error = '1' and two_errors = '0'
                 report "Deu ruim :(" & LF &
                     HT & "entrada: " & integer'image(patterns(i)) & LF &
-                    HT & "esperado: data_o =" & integer'image(patterns(i)) & " one_error = '0' e two_erros = '0'" & LF &
+                    HT & "esperado: data_o =" & integer'image(patterns(i)) & " one_error = '1' e two_erros = '0'" & LF &
                     HT & "obtido  : data_o =" & integer'image(to_integer(unsigned(data_o))) & " one_error = " & bit'image(one_error) & " e two_erros = " & bit'image(two_errors) & LF;
 
             wait for 1 ns;
@@ -108,7 +108,7 @@ begin
             assert one_error = '0' and two_errors = '1'
                 report "Deu ruim :(" & LF &
                     HT & "entrada: " & integer'image(patterns(i)) & LF &
-                    HT & "esperado: one_error = '0' e two_erros = '0'" & LF &
+                    HT & "esperado: one_error = '0' e two_erros = '1'" & LF &
                     HT & "obtido  : one_error = " & bit'image(one_error) & " e two_erros = " & bit'image(two_errors) & LF;
         end loop; 
       
