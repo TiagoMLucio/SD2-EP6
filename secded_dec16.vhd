@@ -47,3 +47,5 @@ begin
     u_data <= data(20 downto 16) & data(14 downto 8) & data(6 downto 4) & data(2);
 
 end arch ; -- arch
+
+0111111

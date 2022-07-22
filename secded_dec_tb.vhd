@@ -46,6 +46,10 @@ architecture test of secded_dec_tb is
     signal mem_data_i16, mem_data_o16: bit_vector(21 downto 0);
     signal uncorrectable_error16: bit;
 
+    signal data_i64, data_o64: bit_vector(63 downto 0);
+    signal mem_data_i64, mem_data_o64: bit_vector(71 downto 0);
+    signal uncorrectable_error64: bit;
+
 begin
     enc8: secded_enc8
         port map (data_i8, mem_data_o8);
@@ -57,6 +61,9 @@ begin
     dec16: secded_dec
         generic map (16)
         port map (mem_data_i16, data_o16, uncorrectable_error16);
+    dec64: secded_dec
+        generic map (64)
+        port map (mem_data_i64, data_o64, uncorrectable_error64);
 
     process 
     type pattern_array is array (integer range<>) of integer;
@@ -127,8 +134,6 @@ begin
     
     begin
         report "BOT";
-
-        report real'image(ceil(log2(real(8))));
 
         wait for 1 ns;
 

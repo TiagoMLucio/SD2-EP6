@@ -31,19 +31,14 @@ architecture arch of secded_dec is
     -- posição do erro na palavra
     signal syndrome: bit_vector(c'length - 2 downto 0);
 
-    -- o MSB é alto quando a syndrome não é nula
-    signal NZ: bit_vector(c'length - 1 downto 0);
-
 begin
     
-    NZ(0) <= '0';
     iterate_cs : for i in c'length - 2 downto 0 generate
         c(i)(2 ** (i) - 1) <= mem_data(2 ** (i) - 1);
         get_c : for j in mem_data'length - 2 downto 2 ** (i) generate
             c(i)(j) <= c(i)(j - 1) xor mem_data(j) when (((j + 1) mod (2 ** (i + 1))) > (2 ** (i) - 1)) else c(i)(j - 1);
         end generate ; -- get_c   
         syndrome(i) <= c(i)(mem_data'length - 2); 
-        NZ(i + 1) <= syndrome(i) or NZ(i);
     end generate ; -- iterate_cs
 
     c(c'length - 1)(0) <= mem_data(0);
@@ -52,7 +47,7 @@ begin
     end generate ; -- get_cfinal
 
     -- syndrome não nula e paridade total correta
-    uncorrectable_error <= NZ(c'length - 1) and not c(c'length - 1)(mem_data'length - 1);
+    uncorrectable_error <=  not c(c'length - 1)(mem_data'length - 1) when (unsigned(syndrome) /= 0) else '0';
 
     -- mem_data ignorando os bits de paridade
     -- corrige o bit caso i + 1 seja o valor da syndrome
@@ -63,3 +58,4 @@ begin
     end generate ; -- get_data
 
 end arch; -- arch
+
