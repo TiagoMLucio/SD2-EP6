@@ -1,5 +1,5 @@
 $date
-  Fri Jul 22 00:14:42 2022
+  Fri Jul 22 02:12:56 2022
 $end
 $version
   GHDL v0
@@ -12,6 +12,8 @@ $upscope $end
 $scope module numeric_bit $end
 $upscope $end
 $scope module math_real $end
+$upscope $end
+$scope module minhas_funcoes $end
 $upscope $end
 $scope module secded_dec_tb $end
 $var reg 8 ! data_i8[7:0] $end

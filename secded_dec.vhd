@@ -9,12 +9,29 @@ library ieee;
 use ieee.numeric_bit.all;
 use ieee.math_real.all;
 
+package minhas_funcoes is
+    function secded_message_size(data_size: positive) return integer;
+  end minhas_funcoes;
+  
+package body minhas_funcoes is
+    function secded_message_size(data_size: positive) return integer is
+        begin
+        return data_size + positive(ceil(log2(real(data_size)))) + 2;
+    end function;
+end minhas_funcoes;
+
+
+library ieee;
+use ieee.numeric_bit.all;
+use ieee.math_real.all;
+use work.minhas_funcoes.all;
+
 entity secded_dec is
     generic(
         data_size: positive := 16
     );
     port (
-        mem_data: in bit_vector(data_size + positive(ceil(log2(real(data_size)))) + 1 downto 0);
+        mem_data: in bit_vector(secded_message_size(data_size) - 1 downto 0);
         u_data: out bit_vector(data_size - 1 downto 0);
         uncorrectable_error: out bit
     );
@@ -52,10 +69,11 @@ begin
     -- mem_data ignorando os bits de paridade
     -- corrige o bit caso i + 1 seja o valor da syndrome
     get_data : for i in mem_data'length - 2 downto 2 generate
-        check_if_p: if floor(log2(real(i) + 0.00001)) = floor(log2(real(i + 1)) + 0.00001) generate
-         u_data(i -  positive(floor(log2(real(i))+ 0.00001)) - 1) <= not mem_data(i) when (unsigned(syndrome) = i + 1) else mem_data(i);
+        check_if_p: if (
+            (bit_vector(to_unsigned(i, mem_data'length)) and bit_vector(to_unsigned(i + 1, mem_data'length))) /= bit_vector(to_unsigned(0, mem_data'length))
+        ) generate
+         u_data(i -  positive(floor(log2(real(i))+ 0.001)) - 1) <= not mem_data(i) when (unsigned(syndrome) = i + 1) else mem_data(i);
         end generate;
     end generate ; -- get_data
 
 end arch; -- arch
-
